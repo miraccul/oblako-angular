@@ -8,3 +8,5 @@ app.use(express.static('./dist/oblako-angular'))
 app.get('/*', (req, res) => {
     res.sendFile('index.html', {root: 'dist/oblako-angular'})
 })
+
+app.listen(process.env.PORT || 8080)
