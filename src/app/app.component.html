@@ -1,1 +1,5 @@
-<button (click)="search()">GEt</button>
+<app-tolbar (modalEvent)="openModal($event)"></app-tolbar>
+<div class="container">
+    <app-card *ngFor="let todo of todoList" [todoList]="todo" (updateEvent)="updateTodos()"></app-card>
+</div>
+<app-form [todoList]="todoList" [ngStyle]="{display: modalIsOpen ? 'block' : 'none'}" (modalEvent)="closeModal($event)" (updateEvent)="updateTodos()"></app-form>

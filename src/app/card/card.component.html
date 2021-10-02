@@ -1,0 +1,8 @@
+<mat-card class="card">
+    <mat-card-title>{{todoList.title}}</mat-card-title>
+    <mat-card-content>
+        <section class="example-section" *ngFor="let todo of todoList.todos">
+            <mat-checkbox [checked]="todo.isComplited" (change)="update(todo.id, todo.isComplited, todo.category_id)"><span value="todo.isComplited" [ngStyle]="{textDecoration: todo.isComplited ? 'line-through' : 'none'}">{{todo.text}}</span></mat-checkbox>
+        </section>
+    </mat-card-content>
+</mat-card>

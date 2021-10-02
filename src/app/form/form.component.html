@@ -1,0 +1,24 @@
+<form [formGroup]="reactiveForm" (submit)="onSubmit($event)">
+        <mat-form-field appearance="fill">
+            <mat-label>Новая задача</mat-label>
+            <input matInput name="text" formControlName="text">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="z-index">
+            <mat-label>Категория</mat-label>
+            <mat-select (selectionChange)="onChange($event.value)" name="selectedCategory" formControlName="selectedCategory">
+                <mat-option *ngFor="let todo of todoList" [value]="todo.id">{{todo.title}}</mat-option>
+                <mat-option value="new">Новая категория</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" [ngStyle]="{display: newCategory === true ? 'block' : 'none'}">
+            <mat-label>Новая категория</mat-label>
+            <input matInput name="catefory" formControlName="category">
+        </mat-form-field>
+        <section>
+            <div class="example-button-row">
+                <button mat-raised-button color="primary" (click)="closeModal()">Отмена</button>
+                <button type="submit" mat-raised-button color="accent">Ок</button>
+            </div>
+        </section>
+    </form>
+<div class="overlay"></div>
