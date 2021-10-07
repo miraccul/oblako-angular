@@ -1,6 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { ProjectService } from "../services/project.service";
+import { Project } from "../project";
+import { Todo } from "../todo";
 
 @Component({
     selector: 'app-form',
@@ -9,80 +12,53 @@ import { HttpClient } from '@angular/common/http';
 })
 
 export class FormComponent implements OnInit {
-    @Input() todoList: any
-    todo: any
+    @Input() todoList: Project[];
     @Output() modalEvent = new EventEmitter()
-    @Output() updateEvent = new EventEmitter()
     public reactiveForm: FormGroup;
     public newCategory: boolean = false;
 
-    constructor(private fb: FormBuilder, private http: HttpClient){}
+    constructor(private fb: FormBuilder, private http: HttpClient, private projectsService: ProjectService){}
 
     ngOnInit(){  
         this.initForm();
     }
+    
     initForm(){
         this.reactiveForm = this.fb.group({
-        text: ['', [
-            Validators.required,
-            Validators.pattern(/[А-я]/)
-            ]
-        ],
-        selectedCategory: [
-            ''
-        ],
-        category: [''
-        ]
+            text: [null, [Validators.required]],
+            selectedCategory: [null, [Validators.required]],
+            category: [null]
         });
     }
-    isControlInvalid(controlName: string): boolean {
-        const control = this.reactiveForm.controls[controlName];
-        const result = control.invalid && control.touched;
-        return result;
+
+    onSubmit() {
+        this.projectsService.addTodo(
+            this.reactiveForm.value.text,
+            !this.newCategory ? this.reactiveForm.value.selectedCategory: undefined,
+            this.newCategory ? this.reactiveForm.value.category : undefined);
+        this.reactiveForm.reset()
+        for(var name in this.reactiveForm.controls) {
+            this.reactiveForm.controls[name].setErrors(null);
+        }
+        this.closeModal()
     }
 
-    onSubmit(event: any) {
-        event.preventDefault()
-        const controls = this.reactiveForm.controls;
-        if (this.reactiveForm.invalid) {
-            Object.keys(controls)
-            .forEach(controlName => controls[controlName].markAsTouched());
-            return;
-        }
-        if(this.reactiveForm.controls.category.value) {
-            this.http.post('https://aqueous-waters-16302.herokuapp.com/todos', {
-                title: this.reactiveForm.controls.category.value,
-                text: this.reactiveForm.controls.text.value
-            }).subscribe(todo => {
-                this.reactiveForm.reset()
-                this.closeModal()
-                this.updateTodos()
-                })
+    onChange(event) {
+        if(event.value === 'newCategory') {
+            this.newCategory = true;
+            this.reactiveForm.controls["category"].setValidators(Validators.required);
         } else {
-             this.http.post('https://aqueous-waters-16302.herokuapp.com/todos', {
-                id: this.reactiveForm.controls.selectedCategory.value,
-                text: this.reactiveForm.controls.text.value
-            }).subscribe(todo => {
-                this.reactiveForm.reset()
-                this.closeModal()
-                this.updateTodos()
-                })
+            this.newCategory = false;
+            this.reactiveForm.controls["category"].clearValidators();
         }
-    }
-
-    updateTodos() {
-        this.updateEvent.emit()
-    }
-
-    onChange(event: any) {
-        if(event === 'new') {
-            this.newCategory = true
-        } else {
-            this.newCategory = false
-        }
+        this.reactiveForm.controls["category"].updateValueAndValidity();
     }
 
     closeModal() {
-        this.modalEvent.emit(false)
+        this.modalEvent.emit()
+    }
+
+    track(index: number, item: Project):number {
+        return item.id;
     }
 }

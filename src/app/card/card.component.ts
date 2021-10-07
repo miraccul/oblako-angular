@@ -1,5 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { Component, Input } from '@angular/core';
+import { ProjectService } from '../services/project.service';
+import { Todo } from '../todo';
+import { Project } from '../project';
 
 @Component({
     selector: 'app-card',
@@ -8,23 +10,16 @@ import { HttpClient} from '@angular/common/http';
 })
 
 export class CardComponent {
-    @Input() todoList: any
-    @Output() updateEvent = new EventEmitter()
+    @Input() todoList: Project;
 
-    constructor(private http: HttpClient) {
+    constructor(private projectsService: ProjectService) {
 
     }
-
-    update(id: number, isComplited: boolean, category_id: number) {
-        this.http.patch(`https://aqueous-waters-16302.herokuapp.com/projects/${category_id}/todos/${id}`, {
-            id: id,
-            isComplited: !isComplited
-        }).subscribe(res => {
-            this.updateTodos()
-        });
+    update(todo: Todo) {
+        this.projectsService.updateTodo(todo.id, todo.category_id);
     }
 
-    updateTodos() {
-        this.updateEvent.emit()
+    track(index: number, item: Todo): number {
+        return item.id;
     }
 }

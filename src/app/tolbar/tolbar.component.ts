@@ -8,7 +8,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class TolbarComponent {
   @Output() modalEvent = new EventEmitter()
   
-    openModal() {
-      this.modalEvent.emit(true)
-    }
+  openModal(): void {
+    this.modalEvent.emit()
+  }
 }

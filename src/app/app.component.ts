@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ProjectService } from './services/project.service';
+import { Observable } from 'rxjs';
+import { Project } from './project';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -7,29 +11,24 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  public todoList: any;
   public modalIsOpen: boolean = false;
-  constructor(private http: HttpClient) {
+  public todoList: Project[];
+  constructor(private projectsService: ProjectService) {}
 
+  ngOnInit() {    
+    this.projectsService.getAllProjects();
+    this.projectsService.entities$.subscribe(todo => this.todoList = todo);
   }
 
-  ngOnInit() {
-    this.updateTodos()
+  public track(index: number, item: Project): number {
+    return item.id
   }
 
-  updateTodos() {
-    this.http.get('https://aqueous-waters-16302.herokuapp.com/projects')
-      .subscribe(todoList => {
-        this.todoList = todoList
-        console.log(todoList);
-      })
-  }
-
-  openModal(event: boolean) {
-    this.modalIsOpen = event
+  openModal(): void {
+    this.modalIsOpen = true;
   }
    
-  closeModal(event: boolean) {
-      this.modalIsOpen = event
+  closeModal(): void {
+    this.modalIsOpen = false;
   }
 }

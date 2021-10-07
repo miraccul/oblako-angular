@@ -1,5 +1,5 @@
-<app-tolbar (modalEvent)="openModal($event)"></app-tolbar>
+<app-tolbar (modalEvent)="openModal()"></app-tolbar>
 <div class="container">
-    <app-card *ngFor="let todo of todoList" [todoList]="todo" (updateEvent)="updateTodos()"></app-card>
+    <app-card *ngFor="let todo of todoList; trackBy: track" [todoList]="todo"></app-card>
 </div>
-<app-form [todoList]="todoList" [ngStyle]="{display: modalIsOpen ? 'block' : 'none'}" (modalEvent)="closeModal($event)" (updateEvent)="updateTodos()"></app-form>
+<app-form [todoList]="todoList" [ngClass]="{hide: !modalIsOpen}" (modalEvent)="closeModal()"></app-form>

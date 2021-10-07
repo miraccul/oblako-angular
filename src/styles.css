@@ -11,7 +11,3 @@ body {
 }
 
 @import "~@angular/material/prebuild-themes/indigo-pink.css";
-
-.example-spacer {
-    flex: 1 1 auto;
-}
