@@ -55,6 +55,7 @@ export class FormComponent implements OnInit {
     }
 
     closeModal() {
+        this.newCategory = false;
         this.modalEvent.emit()
     }
 
