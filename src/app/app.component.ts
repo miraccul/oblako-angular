@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { ProjectService } from './services/project.service';
-import { Observable } from 'rxjs';
 import { Project } from './project';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
